@@ -1,3 +1,7 @@
-/home/pi/Documents/thesis/output_videos
+output_videos klasörü (genellikle derlenmiş çıktıları veya işlenmiş videoları içerir)
 
-/home/pi/Documents/thesis/test_video
+output_videos/
+
+test_video klasörü (girdi videolarını içerir)
+
+test_video/

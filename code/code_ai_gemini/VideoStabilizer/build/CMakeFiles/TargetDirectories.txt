@@ -1,0 +1,3 @@
+/home/pi/Documents/thesis/code/code_ai_gemini/VideoStabilizer/build/CMakeFiles/Stabilizer.dir
+/home/pi/Documents/thesis/code/code_ai_gemini/VideoStabilizer/build/CMakeFiles/edit_cache.dir
+/home/pi/Documents/thesis/code/code_ai_gemini/VideoStabilizer/build/CMakeFiles/rebuild_cache.dir

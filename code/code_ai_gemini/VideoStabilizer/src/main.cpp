@@ -5,15 +5,49 @@
 using namespace cv;
 using namespace std;
 
+/**
+ * [YARDIMCI FONKSIYON]
+ * Ekrana görüntü basar ve çıkış tuşunu kontrol eder.
+ * Geri dönüş değeri: Eğer 'q' tuşuna basılırsa true döner (çıkış sinyali).
+ */
+bool displayFrame(const Mat& img) {
+    imshow("Hafta 1: Optical Flow Takibi", img);
+    // 30ms bekle, eğer 'q'ya basılırsa true döndür
+    if (waitKey(30) == 'q') {
+        return true; 
+    }
+    return false;
+}
+
 int main() {
     // 1. Videoyu Yükle
     // Kendi video yolunu buraya yaz
-    VideoCapture cap("../data/test_video.mp4"); 
+    VideoCapture cap("/home/pi/Documents/thesis/test_video/ControlCam_20200930_104820.mp4"); 
 
     if (!cap.isOpened()) {
         cerr << "Hata: Video dosyası açılamadı!" << endl;
         return -1;
     }
+
+    // -------------------------------------------------------------
+    // [YENİ] Video Kayıt Ayarları (VideoWriter Başlatma)
+    // -------------------------------------------------------------
+    int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH));
+    int frame_height = static_cast<int>(cap.get(CAP_PROP_FRAME_HEIGHT));
+    double fps = cap.get(CAP_PROP_FPS);
+
+    // Çıktı dosyası adı: output.mp4
+    // Codec: 'm', 'p', '4', 'v' (Linux/Windows uyumlu MP4)
+    VideoWriter writer("/home/pi/Documents/thesis/output_videos/code_ai_gemini/video/OpticalFlow.mp4", 
+                       VideoWriter::fourcc('m', 'p', '4', 'v'), 
+                       fps, 
+                       Size(frame_width, frame_height));
+
+    if (!writer.isOpened()) {
+        cerr << "Hata: Video yazıcısı başlatılamadı!" << endl;
+        return -1;
+    }
+    // -------------------------------------------------------------
 
     Mat prev_frame, curr_frame;
     Mat prev_gray, curr_gray;
@@ -64,10 +98,20 @@ int main() {
         // Sonucu göster
         Mat img;
         add(curr_frame, mask, img);
-        imshow("Hafta 1: Optical Flow Takibi", img);
 
-        // 'q' tuşuna basılırsa çık
-        if (waitKey(30) == 'q') break;
+        // [EKLENDİ] Oluşan kareyi dosyaya kaydet
+        writer.write(img);
+
+        // -------------------------------------------------------------
+        // [MODÜLER GÖRÜNTÜLEME]
+        // Pencereyi kapatmak (performans artışı) için aşağıdaki "if" bloğunu tamamen yorum satırı yap.
+        // -------------------------------------------------------------
+        
+        //if (displayFrame(img)) { 
+        //     break; // Fonksiyon true dönerse ('q' basıldıysa) döngüyü kır
+        //}
+
+        // -------------------------------------------------------------
 
         // 5. Bir sonraki döngü için 'şu anki' kareyi 'önceki' yap
         prev_gray = curr_gray.clone();
@@ -79,6 +123,11 @@ int main() {
             mask = Mat::zeros(curr_frame.size(), curr_frame.type()); // Çizgileri temizle
         }
     }
+
+    // [EKLENDİ] Kaynakları serbest bırak
+    cap.release();
+    writer.release();
+    destroyAllWindows();
 
     return 0;
 }
