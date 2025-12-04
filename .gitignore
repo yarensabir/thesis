@@ -1,7 +1,2 @@
-output_videos klasörü (genellikle derlenmiş çıktıları veya işlenmiş videoları içerir)
-
-output_videos/
-
-test_video klasörü (girdi videolarını içerir)
-
-test_video/
+/code_ai_qwen
+/output_videos
