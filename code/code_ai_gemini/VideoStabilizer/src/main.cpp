@@ -11,7 +11,7 @@ using namespace std;
  * Geri dönüş değeri: Eğer 'q' tuşuna basılırsa true döner (çıkış sinyali).
  */
 bool displayFrame(const Mat& img) {
-    imshow("Hafta 1: Optical Flow Takibi", img);
+    imshow("Optical Flow Takibi", img);
     // 30ms bekle, eğer 'q'ya basılırsa true döndür
     if (waitKey(30) == 'q') {
         return true; 
@@ -20,9 +20,16 @@ bool displayFrame(const Mat& img) {
 }
 
 int main() {
+    
+    FILE* fp = fopen("/home/pi/Documents/thesis/code/code_ai_gemini/VideoStabilizer/motion_data_full.csv", "w");
+    fprintf(fp, "frame,dx,dy,angle\n"); // Başlık satırı
+    int frame_idx = 0; // Kare indeksini 0'dan başlatıyoruz
+    
+    
     // 1. Videoyu Yükle
     // Kendi video yolunu buraya yaz
     VideoCapture cap("/home/pi/Documents/thesis/test_video/ControlCam_20200930_104820.mp4"); 
+    //VideoCapture cap("/home/pi/Documents/thesis/test_video/ControlCam_7sec.mp4"); 
 
     if (!cap.isOpened()) {
         cerr << "Hata: Video dosyası açılamadı!" << endl;
@@ -30,7 +37,7 @@ int main() {
     }
 
     // -------------------------------------------------------------
-    // [YENİ] Video Kayıt Ayarları (VideoWriter Başlatma)
+    //  Video Kayıt Ayarları (VideoWriter Başlatma)
     // -------------------------------------------------------------
     int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH));
     int frame_height = static_cast<int>(cap.get(CAP_PROP_FRAME_HEIGHT));
@@ -38,7 +45,7 @@ int main() {
 
     // Çıktı dosyası adı: output.mp4
     // Codec: 'm', 'p', '4', 'v' (Linux/Windows uyumlu MP4)
-    VideoWriter writer("/home/pi/Documents/thesis/output_videos/code_ai_gemini/video/OpticalFlow.mp4", 
+    VideoWriter writer("/home/pi/Documents/thesis/output_videos/code_ai_gemini/video/OpticalFlow_full.mp4", 
                        VideoWriter::fourcc('m', 'p', '4', 'v'), 
                        fps, 
                        Size(frame_width, frame_height));
@@ -62,7 +69,9 @@ int main() {
 
     // 2. Takip edilecek özellikleri (feature) bul
     // maxCorners=200, qualityLevel=0.01, minDistance=30
-    goodFeaturesToTrack(prev_gray, prev_pts, 200, 0.01, 30); // köşe bul
+    //goodFeaturesToTrack(prev_gray, prev_pts, 200, 0.01, 30); // köşe bul
+    //200 nokta raspberry pi'yi zorluyor olabilir, düşürüyoruz
+    goodFeaturesToTrack(prev_gray, prev_pts, 50, 0.01, 30);
 
     // Görselleştirme için maske
     Mat mask = Mat::zeros(prev_frame.size(), prev_frame.type());
@@ -70,6 +79,8 @@ int main() {
     while (true) {
         cap >> curr_frame;
         if (curr_frame.empty()) break;
+        
+        frame_idx++; // Her yeni karede sayacı artır
 
         cvtColor(curr_frame, curr_gray, COLOR_BGR2GRAY);
 
@@ -81,7 +92,7 @@ int main() {
         // maxLevel: Piramit seviyesi (büyük hareketler için 3 iyidir)
         calcOpticalFlowPyrLK(prev_gray, curr_gray, prev_pts, curr_pts, status, err, Size(21, 21), 3); // bulunan köşeleri takip et ve ekrana çizdir
 
-        // [YENİ] Matris hesabı için "sadece iyi noktaları" tutacak vektörler
+        // Matris hesabı için "sadece iyi noktaları" tutacak vektörler
         vector<Point2f> p_prev_good;
         vector<Point2f> p_curr_good;
 
@@ -93,10 +104,10 @@ int main() {
             if (status[i] == 1) {
                 // Matris hesabı için sakla
                 p_prev_good.push_back(prev_pts[i]);
-                good_new.push_back(curr_pts[i]);
+                p_curr_good.push_back(curr_pts[i]);
 
                 // Bir sonraki frame için sakla
-                good_new_for_next_loop.push_back(curr_pts[i]);
+                good_new.push_back(curr_pts[i]);
 
                 // ÇİZ
                 // Hareket çizgisi çiz (Yeşil)
@@ -108,7 +119,7 @@ int main() {
 
 
         // -----------------------------------------------------------------------
-        // [BURASI YENİ EKLENECEK KISIM] - HAREKET KESTİRİMİ (HAFTA 2)
+        //  HAREKET KESTİRİMİ (HAFTA 2)
         // -----------------------------------------------------------------------
 
         // Yeterli nokta varsa (örn. en az 10 nokta) matris hesapla
@@ -126,19 +137,19 @@ int main() {
                 // Konsola yazdır (Doğrulama için)
                 cout << "dx: " << dx << " | dy: " << dy << " | angle: " << da << endl;
                 
-                // İPUCU: İleride bu değerleri bir dosyaya kaydedeceğiz.
+                //Dosyaya kaydet
+                // static int frame_idx = 0; frame_idx++; // Frame sayacı ekleyebilirsin
+                fprintf(fp, "%d, %f, %f, %f\n", frame_idx, dx, dy, da); // i yerine kendi frame sayacını kullan
             }
         }
         // -----------------------------------------------------------------------
-
-
 
 
         // Sonucu göster
         Mat img;
         add(curr_frame, mask, img);
 
-        // [EKLENDİ] Oluşan kareyi dosyaya kaydet
+        // Oluşan kareyi dosyaya kaydet
         writer.write(img);
 
         // -------------------------------------------------------------
@@ -163,10 +174,12 @@ int main() {
         }
     }
 
-    // [EKLENDİ] Kaynakları serbest bırak
+    // Kaynakları serbest bırak
     cap.release();
     writer.release();
     destroyAllWindows();
+
+    fclose(fp);
 
     return 0;
 }
