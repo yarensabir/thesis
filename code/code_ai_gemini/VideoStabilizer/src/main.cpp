@@ -62,7 +62,7 @@ int main() {
 
     // 2. Takip edilecek özellikleri (feature) bul
     // maxCorners=200, qualityLevel=0.01, minDistance=30
-    goodFeaturesToTrack(prev_gray, prev_pts, 200, 0.01, 30);
+    goodFeaturesToTrack(prev_gray, prev_pts, 200, 0.01, 30); // köşe bul
 
     // Görselleştirme için maske
     Mat mask = Mat::zeros(prev_frame.size(), prev_frame.type());
@@ -79,21 +79,60 @@ int main() {
         
         // winSize: Arama penceresi boyutu (21x21 iyidir)
         // maxLevel: Piramit seviyesi (büyük hareketler için 3 iyidir)
-        calcOpticalFlowPyrLK(prev_gray, curr_gray, prev_pts, curr_pts, status, err, Size(21, 21), 3);
+        calcOpticalFlowPyrLK(prev_gray, curr_gray, prev_pts, curr_pts, status, err, Size(21, 21), 3); // bulunan köşeleri takip et ve ekrana çizdir
+
+        // [YENİ] Matris hesabı için "sadece iyi noktaları" tutacak vektörler
+        vector<Point2f> p_prev_good;
+        vector<Point2f> p_curr_good;
 
         // 4. İyi noktaları seç ve çiz
-        vector<Point2f> good_new;
+        vector<Point2f> good_new; // Bir sonraki döngü için
         for (uint i = 0; i < prev_pts.size(); i++) {
             // Eğer nokta takibi başarısızsa atla
+            // Eğer takip başarılıysa (status == 1)
             if (status[i] == 1) {
+                // Matris hesabı için sakla
+                p_prev_good.push_back(prev_pts[i]);
                 good_new.push_back(curr_pts[i]);
 
+                // Bir sonraki frame için sakla
+                good_new_for_next_loop.push_back(curr_pts[i]);
+
+                // ÇİZ
                 // Hareket çizgisi çiz (Yeşil)
                 line(mask, curr_pts[i], prev_pts[i], Scalar(0, 255, 0), 2);
                 // Nokta koy (Kırmızı)
                 circle(curr_frame, curr_pts[i], 5, Scalar(0, 0, 255), -1);
             }
         }
+
+
+        // -----------------------------------------------------------------------
+        // [BURASI YENİ EKLENECEK KISIM] - HAREKET KESTİRİMİ (HAFTA 2)
+        // -----------------------------------------------------------------------
+
+        // Yeterli nokta varsa (örn. en az 10 nokta) matris hesapla
+        if (p_prev_good.size() > 10) {
+            // Rigid Transform (Kayma + Dönme) hesapla
+            // false parametresi "full affine" değil, "partial affine" (shear yok) demektir.
+            Mat T = estimateAffinePartial2D(p_prev_good, p_curr_good);
+
+            if (!T.empty()) {
+                // Matristen hareket verilerini çek
+                double dx = T.at<double>(0, 2); // Yatay kayma
+                double dy = T.at<double>(1, 2); // Dikey kayma
+                double da = atan2(T.at<double>(1, 0), T.at<double>(0, 0)); // Dönme açısı (radyan)
+
+                // Konsola yazdır (Doğrulama için)
+                cout << "dx: " << dx << " | dy: " << dy << " | angle: " << da << endl;
+                
+                // İPUCU: İleride bu değerleri bir dosyaya kaydedeceğiz.
+            }
+        }
+        // -----------------------------------------------------------------------
+
+
+
 
         // Sonucu göster
         Mat img;
