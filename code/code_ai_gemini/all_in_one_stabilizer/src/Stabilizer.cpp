@@ -19,11 +19,11 @@ struct MotionKalman {
     Mat state, meas;
 
     MotionKalman() {
-        KF.init(6, 3, 0); // 6 Durum (x,y,a, vx,vy,va), 3 Ölçüm (x,y,a)
+        KF.init(6, 3, 0); 
         setIdentity(KF.transitionMatrix);
         setIdentity(KF.measurementMatrix);
-        setIdentity(KF.processNoiseCov, Scalar::all(1e-5)); // Hassasiyet ayarı
-        setIdentity(KF.measurementNoiseCov, Scalar::all(1e-1)); // Gürültü ayarı
+        setIdentity(KF.processNoiseCov, Scalar::all(1e-5)); 
+        setIdentity(KF.measurementNoiseCov, Scalar::all(1e-1)); 
         setIdentity(KF.errorCovPost, Scalar::all(1));
         meas = Mat::zeros(3, 1, CV_32F);
     }
@@ -39,34 +39,43 @@ struct MotionKalman {
 };
 
 // ---------------------------------------------------------
-// 1. GERÇEK ZAMANLI FONKSİYON
+// 1. GERÇEK ZAMANLI FONKSİYON (DÜZELTİLDİ)
 // ---------------------------------------------------------
-void runRealTimeStabilization(RealTimeMethod method) {
+// Parametreye 'outputName' eklendi
+void runRealTimeStabilization(RealTimeMethod method, string outputName) {
     cout << "[Real-Time] Pi Kamera GStreamer ile aciliyor..." << endl;
     if (method == RT_KALMAN_FILTER) cout << ">> Yontem: KALMAN FILTRESI" << endl;
     else cout << ">> Yontem: KAYAN PENCERE (BUFFER)" << endl;
 
+    // Not: Yüksek çözünürlük istersen width=1280, height=720 yapabilirsin.
     string pipeline = "libcamerasrc ! video/x-raw, width=640, height=480, framerate=30/1 ! videoconvert ! appsink";
     VideoCapture cap(pipeline, CAP_GSTREAMER);
 
     if(!cap.isOpened()) { cerr << "Hata: Kamera acilamadi!" << endl; return; }
 
-    VideoWriter writer("RealTime_Result.mp4", VideoWriter::fourcc('m','p','4','v'), 30, Size(640,480));
+    // DÜZELTME: İlk kareyi alıp gerçek boyutları öğreniyoruz
+    Mat curr;
+    cap >> curr;
+    if (curr.empty()) return;
+    
+    int w = curr.cols;
+    int h = curr.rows;
+
+    // DÜZELTME: outputName kullanıldı ve dinamik boyut (w, h) verildi
+    VideoWriter writer(outputName, VideoWriter::fourcc('m','p','4','v'), 30, Size(w, h));
+    
     FILE* fp = fopen("data_realtime.csv", "w");
     fprintf(fp, "frame,raw_x,smooth_x\n");
 
     MotionEstimator estimator;
-    MotionKalman kf; // Kalman nesnesi
-    Mat curr;
+    MotionKalman kf; 
     
     int BUFFER_SIZE = 30; 
     deque<TransformParam> motion_buffer;
     deque<Mat> frame_buffer;
     TransformParam cumulative_motion(0,0,0);
-    TransformParam smoothed_pos(0,0,0); // Kalman için anlık tutucu
+    TransformParam smoothed_pos(0,0,0); 
 
-    cap >> curr;
-    if (curr.empty()) return;
     estimator.initialize(curr);
 
     // Başlangıç değerleri
@@ -74,44 +83,31 @@ void runRealTimeStabilization(RealTimeMethod method) {
     frame_buffer.push_back(curr.clone());
 
     int frame_idx = 0;
-    cout << "Islem basliyor..." << endl;
+    cout << "Islem basliyor... Kayit: " << outputName << endl;
 
     while(true) {
         cap >> curr;
         if(curr.empty()) break;
 
-        // A. HAREKETİ BUL
         TransformParam motion = estimator.estimate(curr);
         cumulative_motion += motion;
 
-        // B. YÖNTEM SEÇİMİ (BURASI KRİTİK NOKTA)
         if (method == RT_KALMAN_FILTER) {
-            // Kalman anlık çalışır, buffer beklemesine gerek yoktur ama
-            // görüntüyle senkronize gitmek için buffer yapısını koruyoruz.
-            // Sadece smoothed_pos hesabını değiştiriyoruz.
             smoothed_pos = kf.update(cumulative_motion);
         }
         
-        // Verileri Buffer'a at
         motion_buffer.push_back(cumulative_motion);
         frame_buffer.push_back(curr.clone());
 
-        // C. Buffer Dolduysa İşle
         if(frame_buffer.size() > BUFFER_SIZE) {
-            
-            // Eğer Yöntem BUFFER ise ortalamayı burada alıyoruz
             if (method == RT_SLIDING_WINDOW) {
                 TransformParam sum(0,0,0);
                 for(const auto& m : motion_buffer) sum += m;
                 smoothed_pos = sum / (double)motion_buffer.size();
             }
 
-            // Kalman zaten yukarıda hesaplanmıştı, smoothed_pos hazır.
-
             Mat target_frame = frame_buffer.front();
-            TransformParam target_pos = motion_buffer.front(); // Orijinal konum
-            
-            // Fark: Hedef - Pürüzsüz
+            TransformParam target_pos = motion_buffer.front(); 
             TransformParam diff = target_pos - smoothed_pos;
             
             Mat M = getAffineFromParam(diff);
@@ -127,7 +123,6 @@ void runRealTimeStabilization(RealTimeMethod method) {
         }
     }
     
-    // Kalanları boşalt
     while(!frame_buffer.empty()) {
         writer.write(frame_buffer.front());
         frame_buffer.pop_front();
@@ -137,9 +132,10 @@ void runRealTimeStabilization(RealTimeMethod method) {
 }
 
 // ---------------------------------------------------------
-// 2. ÇEVRİMDIŞI FONKSİYON
+// 2. ÇEVRİMDIŞI FONKSİYON (DÜZELTİLDİ)
 // ---------------------------------------------------------
-void runOfflineStabilization(string videoPath, OfflineMethod method) {
+// Parametreye 'outputName' eklendi
+void runOfflineStabilization(string videoPath, OfflineMethod method, string outputName) {
     cout << "[Offline] Analiz yapiliyor..." << endl;
     if (method == OFF_GAUSSIAN) cout << ">> Yontem: GAUSSIAN SMOOTHING" << endl;
     else cout << ">> Yontem: MOVING AVERAGE" << endl;
@@ -149,8 +145,8 @@ void runOfflineStabilization(string videoPath, OfflineMethod method) {
 
     MotionEstimator estimator;
     Mat curr;
-    vector<TransformParam> trajectory; // Kümülatif yörünge
-    vector<TransformParam> transforms; // Anlık hareketler
+    vector<TransformParam> trajectory; 
+    vector<TransformParam> transforms; 
     TransformParam cumulative(0,0,0);
 
     cap >> curr;
@@ -166,10 +162,10 @@ void runOfflineStabilization(string videoPath, OfflineMethod method) {
         trajectory.push_back(cumulative);
     }
     
-    // PASS 2: Yumuşatma (YÖNTEM SEÇİMİ BURADA)
+    // PASS 2: Yumuşatma
     cout << "Yumusatma uygulaniyor..." << endl;
     vector<TransformParam> smoothed_trajectory;
-    int RADIUS = 30; // Pencere yarıçapı
+    int RADIUS = 30; 
 
     for(size_t i=0; i<trajectory.size(); i++) {
         TransformParam sum(0,0,0);
@@ -177,44 +173,37 @@ void runOfflineStabilization(string videoPath, OfflineMethod method) {
 
         for(int j=-RADIUS; j<=RADIUS; j++) {
             if(i+j >= 0 && i+j < trajectory.size()) {
-                
                 if (method == OFF_MOVING_AVERAGE) {
-                    // YÖNTEM A: Eşit Ağırlık (1.0)
                     sum += trajectory[i+j];
                     total_weight += 1.0;
                 } 
                 else if (method == OFF_GAUSSIAN) {
-                    // YÖNTEM B: Gaussian Ağırlık
-                    // Sigma = Radius / 3 standart bir kuraldır
                     double sigma = RADIUS / 3.0;
                     double weight = exp(-(j*j) / (2 * sigma * sigma));
-                    
-                    // TransformParam ile double çarpımı operatörü tanımlamadığımız için elle yapıyoruz:
                     TransformParam p = trajectory[i+j];
                     sum.dx += p.dx * weight;
                     sum.dy += p.dy * weight;
                     sum.da += p.da * weight;
-                    
                     total_weight += weight;
                 }
             }
         }
         
-        // Ağırlıklı Ortalama
         if (method == OFF_MOVING_AVERAGE) {
             smoothed_trajectory.push_back(sum / total_weight);
         } else {
-            // Gaussian için elle bölme
             smoothed_trajectory.push_back(TransformParam(sum.dx/total_weight, sum.dy/total_weight, sum.da/total_weight));
         }
     }
 
     // PASS 3: Video Yazma
-    cout << "Video olusturuluyor..." << endl;
+    cout << "Video olusturuluyor: " << outputName << endl;
     cap.release(); cap.open(videoPath);
     int w = (int)cap.get(CAP_PROP_FRAME_WIDTH);
     int h = (int)cap.get(CAP_PROP_FRAME_HEIGHT);
-    VideoWriter writer("Offline_Result.mp4", VideoWriter::fourcc('m','p','4','v'), 30, Size(w,h));
+    
+    // DÜZELTME: outputName kullanıldı
+    VideoWriter writer(outputName, VideoWriter::fourcc('m','p','4','v'), 30, Size(w,h));
     
     cap >> curr; 
     for(size_t i=0; i<transforms.size(); i++) {

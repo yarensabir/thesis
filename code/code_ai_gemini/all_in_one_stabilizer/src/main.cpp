@@ -4,7 +4,12 @@
 using namespace std;
 
 int main() {
+    // Girdi videosu (Offline test için)
     string videoPath = "/home/pi/Documents/thesis/test_video/ControlCam_7sec.mp4"; 
+    
+    // Çıktı dosya isimlerini burada belirliyoruz
+    string outRT = "Result_RealTime.mp4";
+    string outOffline = "Result_Offline.mp4";
 
     int mainChoice, subChoice;
     cout << "==========================================" << endl;
@@ -22,8 +27,9 @@ int main() {
         cout << "Yontem: ";
         cin >> subChoice;
 
-        if(subChoice == 1) runRealTimeStabilization(RT_SLIDING_WINDOW);
-        else if(subChoice == 2) runRealTimeStabilization(RT_KALMAN_FILTER);
+        // DÜZELTME: Dosya adı parametresi (outRT) eklendi
+        if(subChoice == 1) runRealTimeStabilization(RT_SLIDING_WINDOW, outRT);
+        else if(subChoice == 2) runRealTimeStabilization(RT_KALMAN_FILTER, outRT);
         else cout << "Hatali secim!" << endl;
 
     } else if (mainChoice == 2) {
@@ -33,8 +39,9 @@ int main() {
         cout << "Yontem: ";
         cin >> subChoice;
 
-        if(subChoice == 1) runOfflineStabilization(videoPath, OFF_MOVING_AVERAGE);
-        else if(subChoice == 2) runOfflineStabilization(videoPath, OFF_GAUSSIAN);
+        // DÜZELTME: Dosya adı parametresi (outOffline) eklendi
+        if(subChoice == 1) runOfflineStabilization(videoPath, OFF_MOVING_AVERAGE, outOffline);
+        else if(subChoice == 2) runOfflineStabilization(videoPath, OFF_GAUSSIAN, outOffline);
         else cout << "Hatali secim!" << endl;
 
     } else {

@@ -129,6 +129,78 @@ Stabilizer/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/build
 .PHONY : Stabilizer/fast
 
+src/MotionEstimator.o: src/MotionEstimator.cpp.o
+.PHONY : src/MotionEstimator.o
+
+# target to build an object file
+src/MotionEstimator.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o
+.PHONY : src/MotionEstimator.cpp.o
+
+src/MotionEstimator.i: src/MotionEstimator.cpp.i
+.PHONY : src/MotionEstimator.i
+
+# target to preprocess a source file
+src/MotionEstimator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.i
+.PHONY : src/MotionEstimator.cpp.i
+
+src/MotionEstimator.s: src/MotionEstimator.cpp.s
+.PHONY : src/MotionEstimator.s
+
+# target to generate assembly for a file
+src/MotionEstimator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.s
+.PHONY : src/MotionEstimator.cpp.s
+
+src/Stabilizer.o: src/Stabilizer.cpp.o
+.PHONY : src/Stabilizer.o
+
+# target to build an object file
+src/Stabilizer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o
+.PHONY : src/Stabilizer.cpp.o
+
+src/Stabilizer.i: src/Stabilizer.cpp.i
+.PHONY : src/Stabilizer.i
+
+# target to preprocess a source file
+src/Stabilizer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.i
+.PHONY : src/Stabilizer.cpp.i
+
+src/Stabilizer.s: src/Stabilizer.cpp.s
+.PHONY : src/Stabilizer.s
+
+# target to generate assembly for a file
+src/Stabilizer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.s
+.PHONY : src/Stabilizer.cpp.s
+
+src/Transform.o: src/Transform.cpp.o
+.PHONY : src/Transform.o
+
+# target to build an object file
+src/Transform.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/src/Transform.cpp.o
+.PHONY : src/Transform.cpp.o
+
+src/Transform.i: src/Transform.cpp.i
+.PHONY : src/Transform.i
+
+# target to preprocess a source file
+src/Transform.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/src/Transform.cpp.i
+.PHONY : src/Transform.cpp.i
+
+src/Transform.s: src/Transform.cpp.s
+.PHONY : src/Transform.s
+
+# target to generate assembly for a file
+src/Transform.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Stabilizer.dir/build.make CMakeFiles/Stabilizer.dir/src/Transform.cpp.s
+.PHONY : src/Transform.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -162,6 +234,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Stabilizer"
+	@echo "... src/MotionEstimator.o"
+	@echo "... src/MotionEstimator.i"
+	@echo "... src/MotionEstimator.s"
+	@echo "... src/Stabilizer.o"
+	@echo "... src/Stabilizer.i"
+	@echo "... src/Stabilizer.s"
+	@echo "... src/Transform.o"
+	@echo "... src/Transform.i"
+	@echo "... src/Transform.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

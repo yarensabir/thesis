@@ -8,6 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/MotionEstimator.cpp" "CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o" "gcc" "CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o.d"
+  "/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Stabilizer.cpp" "CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o" "gcc" "CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o.d"
+  "/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Transform.cpp" "CMakeFiles/Stabilizer.dir/src/Transform.cpp.o" "gcc" "CMakeFiles/Stabilizer.dir/src/Transform.cpp.o.d"
   "/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/main.cpp" "CMakeFiles/Stabilizer.dir/src/main.cpp.o" "gcc" "CMakeFiles/Stabilizer.dir/src/main.cpp.o.d"
   )
 

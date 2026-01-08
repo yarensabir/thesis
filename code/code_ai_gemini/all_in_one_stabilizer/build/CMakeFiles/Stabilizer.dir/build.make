@@ -69,10 +69,52 @@ include CMakeFiles/Stabilizer.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Stabilizer.dir/flags.make
 
+CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o: CMakeFiles/Stabilizer.dir/flags.make
+CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o: /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/MotionEstimator.cpp
+CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o: CMakeFiles/Stabilizer.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o -MF CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o.d -o CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o -c /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/MotionEstimator.cpp
+
+CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/MotionEstimator.cpp > CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.i
+
+CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/MotionEstimator.cpp -o CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.s
+
+CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o: CMakeFiles/Stabilizer.dir/flags.make
+CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o: /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Stabilizer.cpp
+CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o: CMakeFiles/Stabilizer.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o -MF CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o.d -o CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o -c /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Stabilizer.cpp
+
+CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Stabilizer.cpp > CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.i
+
+CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Stabilizer.cpp -o CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.s
+
+CMakeFiles/Stabilizer.dir/src/Transform.cpp.o: CMakeFiles/Stabilizer.dir/flags.make
+CMakeFiles/Stabilizer.dir/src/Transform.cpp.o: /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Transform.cpp
+CMakeFiles/Stabilizer.dir/src/Transform.cpp.o: CMakeFiles/Stabilizer.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Stabilizer.dir/src/Transform.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Stabilizer.dir/src/Transform.cpp.o -MF CMakeFiles/Stabilizer.dir/src/Transform.cpp.o.d -o CMakeFiles/Stabilizer.dir/src/Transform.cpp.o -c /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Transform.cpp
+
+CMakeFiles/Stabilizer.dir/src/Transform.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Stabilizer.dir/src/Transform.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Transform.cpp > CMakeFiles/Stabilizer.dir/src/Transform.cpp.i
+
+CMakeFiles/Stabilizer.dir/src/Transform.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Stabilizer.dir/src/Transform.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/Transform.cpp -o CMakeFiles/Stabilizer.dir/src/Transform.cpp.s
+
 CMakeFiles/Stabilizer.dir/src/main.cpp.o: CMakeFiles/Stabilizer.dir/flags.make
 CMakeFiles/Stabilizer.dir/src/main.cpp.o: /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/main.cpp
 CMakeFiles/Stabilizer.dir/src/main.cpp.o: CMakeFiles/Stabilizer.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Stabilizer.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Stabilizer.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Stabilizer.dir/src/main.cpp.o -MF CMakeFiles/Stabilizer.dir/src/main.cpp.o.d -o CMakeFiles/Stabilizer.dir/src/main.cpp.o -c /home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/src/main.cpp
 
 CMakeFiles/Stabilizer.dir/src/main.cpp.i: cmake_force
@@ -85,11 +127,17 @@ CMakeFiles/Stabilizer.dir/src/main.cpp.s: cmake_force
 
 # Object files for target Stabilizer
 Stabilizer_OBJECTS = \
+"CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o" \
+"CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o" \
+"CMakeFiles/Stabilizer.dir/src/Transform.cpp.o" \
 "CMakeFiles/Stabilizer.dir/src/main.cpp.o"
 
 # External object files for target Stabilizer
 Stabilizer_EXTERNAL_OBJECTS =
 
+Stabilizer: CMakeFiles/Stabilizer.dir/src/MotionEstimator.cpp.o
+Stabilizer: CMakeFiles/Stabilizer.dir/src/Stabilizer.cpp.o
+Stabilizer: CMakeFiles/Stabilizer.dir/src/Transform.cpp.o
 Stabilizer: CMakeFiles/Stabilizer.dir/src/main.cpp.o
 Stabilizer: CMakeFiles/Stabilizer.dir/build.make
 Stabilizer: /usr/lib/aarch64-linux-gnu/libopencv_stitching.so.4.6.0
@@ -148,7 +196,7 @@ Stabilizer: /usr/lib/aarch64-linux-gnu/libopencv_photo.so.4.6.0
 Stabilizer: /usr/lib/aarch64-linux-gnu/libopencv_imgproc.so.4.6.0
 Stabilizer: /usr/lib/aarch64-linux-gnu/libopencv_core.so.4.6.0
 Stabilizer: CMakeFiles/Stabilizer.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable Stabilizer"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable Stabilizer"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Stabilizer.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
