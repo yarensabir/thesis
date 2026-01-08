@@ -39,7 +39,7 @@ struct MotionKalman {
 };
 
 // ---------------------------------------------------------
-// 1. GERÇEK ZAMANLI FONKSİYON (DÜZELTİLDİ)
+// 1. GERÇEK ZAMANLI FONKSİYON
 // ---------------------------------------------------------
 // Parametreye 'outputName' eklendi
 void runRealTimeStabilization(RealTimeMethod method, string outputName) {
@@ -85,7 +85,12 @@ void runRealTimeStabilization(RealTimeMethod method, string outputName) {
     int frame_idx = 0;
     cout << "Islem basliyor... Kayit: " << outputName << endl;
 
+    fprintf(fp, "frame,raw_x,smooth_x,fps,process_time_ms\n");
+
     while(true) {
+        // 1. Süreölçer Başlat
+        double t_start = (double)cv::getTickCount();
+        
         cap >> curr;
         if(curr.empty()) break;
 
@@ -115,8 +120,16 @@ void runRealTimeStabilization(RealTimeMethod method, string outputName) {
             warpAffine(target_frame, stabilized, M, target_frame.size());
 
             writer.write(stabilized);
-            fprintf(fp, "%d, %f, %f\n", frame_idx, target_pos.dx, smoothed_pos.dx);
 
+            // 2. Süreölçer Durdur ve Hesapla
+            double t_end = (double)cv::getTickCount();
+            double time_spent = (t_end - t_start) / cv::getTickFrequency();
+            double fps = 1.0 / time_spent;
+            double time_ms = time_spent * 1000.0;
+
+            // target_pos: O an dosyaya yazılan karenin ham hali
+            // smoothed_pos: O an dosyaya yazılan karenin yumuşatılmış hali
+            fprintf(fp, "%d, %f, %f, %.2f, %.2f\n", frame_idx, target_pos.dx, smoothed_pos.dx, fps, time_ms);
             frame_buffer.pop_front();
             motion_buffer.pop_front();
             frame_idx++;
@@ -132,7 +145,7 @@ void runRealTimeStabilization(RealTimeMethod method, string outputName) {
 }
 
 // ---------------------------------------------------------
-// 2. ÇEVRİMDIŞI FONKSİYON (DÜZELTİLDİ)
+// 2. ÇEVRİMDIŞI FONKSİYON 
 // ---------------------------------------------------------
 // Parametreye 'outputName' eklendi
 void runOfflineStabilization(string videoPath, OfflineMethod method, string outputName) {
@@ -195,6 +208,25 @@ void runOfflineStabilization(string videoPath, OfflineMethod method, string outp
             smoothed_trajectory.push_back(TransformParam(sum.dx/total_weight, sum.dy/total_weight, sum.da/total_weight));
         }
     }
+
+    // ... PASS 2: Yumuşatma döngüsü bittikten sonra ...
+
+    // [TEZ VERİSİ] CSV Kaydı Başlangıcı
+    ofstream logFile("sonuc_offline.csv");
+    logFile << "frame,raw_x,raw_y,raw_a,smooth_x,smooth_y,smooth_a" << endl;
+
+    for(size_t i=0; i < trajectory.size(); i++) {
+        // trajectory[i] -> Ham (Sarsıntılı) veriler
+        // smoothed_trajectory[i] -> Filtrelenmiş (Stabil) veriler
+        
+        // Verileri virgülle ayrılmış (CSV) formatta yaz
+        logFile << i << "," 
+                << trajectory[i].dx << "," << trajectory[i].dy << "," << trajectory[i].da << ","
+                << smoothed_trajectory[i].dx << "," << smoothed_trajectory[i].dy << "," << smoothed_trajectory[i].da 
+                << endl;
+    }
+    logFile.close();
+    cout << ">> Analiz verileri 'sonuc_offline.csv' dosyasina kaydedildi." << endl;
 
     // PASS 3: Video Yazma
     cout << "Video olusturuluyor: " << outputName << endl;
