@@ -1,0 +1,3 @@
+/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles/Stabilizer.dir
+/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles/edit_cache.dir
+/home/pi/Documents/thesis/code/code_ai_gemini/all_in_one_stabilizer/build/CMakeFiles/rebuild_cache.dir
